@@ -23,5 +23,9 @@
     "prettier": "^3.8.1",
     "roblox-ts": "^3.0.0",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@rbxts/profileservice": "^1.4.2",
+    "@rbxts/services": "^1.6.0"
   }
 }
