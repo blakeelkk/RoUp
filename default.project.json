@@ -43,7 +43,6 @@
 			}
 		},
 		"Workspace": {
-			"$className": "Workspace",
 			"$ignoreUnknownInstances": true,
 			"$path": "out/world",
 			"$properties": {
