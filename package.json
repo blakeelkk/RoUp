@@ -25,6 +25,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@rbxts/net": "^3.0.10",
     "@rbxts/profileservice": "^1.4.2",
     "@rbxts/services": "^1.6.0"
   }
