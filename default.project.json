@@ -45,7 +45,7 @@
 		"Workspace": {
 			"$className": "Workspace",
 			"$ignoreUnknownInstances": true,
-			"$path": "src/world",
+			"$path": "out/world",
 			"$properties": {
 				"FilteringEnabled": true
 			}
