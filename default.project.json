@@ -8,12 +8,14 @@
 		"$className": "DataModel",
 		"ServerScriptService": {
 			"$className": "ServerScriptService",
+			"$ignoreUnknownInstances": true,
 			"TS": {
 				"$path": "out/server"
 			}
 		},
 		"ReplicatedStorage": {
 			"$className": "ReplicatedStorage",
+			"$ignoreUnknownInstances": true,
 			"rbxts_include": {
 				"$path": "include",
 				"node_modules": {
@@ -34,6 +36,7 @@
 			"$className": "StarterPlayer",
 			"StarterPlayerScripts": {
 				"$className": "StarterPlayerScripts",
+				"$ignoreUnknownInstances": true,
 				"TS": {
 					"$path": "out/client"
 				}
@@ -41,6 +44,7 @@
 		},
 		"Workspace": {
 			"$className": "Workspace",
+			"$ignoreUnknownInstances": true,
 			"$properties": {
 				"FilteringEnabled": true
 			}
