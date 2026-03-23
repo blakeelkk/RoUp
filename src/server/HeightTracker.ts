@@ -3,8 +3,13 @@ import { GameConfig } from "shared/GameConfig";
 import { getProfile, updateHighestY } from "server/PlayerManager";
 import Remotes from "shared/Remotes";
 import { computeJumpHeight } from "server/JumpManager";
+import { updateCheckpoint } from "server/CheckpointManager";
 
 const ServerRemotes = Remotes.Server;
+
+// Throttle HeightUpdate to 4 Hz per player
+const lastHeightSent = new Map<Player, number>();
+Players.PlayerRemoving.Connect((player) => lastHeightSent.delete(player));
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -35,9 +40,17 @@ RunService.Heartbeat.Connect(() => {
 		const profile = getProfile(player);
 		if (profile === undefined) continue; // profile not loaded yet
 
+		// Send live height data to client at ~4 Hz
+		const now = os.clock();
+		if ((now - (lastHeightSent.get(player) ?? 0)) >= 0.25) {
+			lastHeightSent.set(player, now);
+			ServerRemotes.Get("HeightUpdate").SendToPlayer(player, y, profile.highestY, profile.rebirthCount);
+		}
+
 		if (y <= profile.highestY) continue; // no new peak — skip everything
 
 		updateHighestY(player, y);
+		updateCheckpoint(player, y);
 
 		const newLevel = computeLevel(y);
 		if (newLevel <= profile.currentLevel) continue; // no level-up
