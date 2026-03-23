@@ -1,0 +1,111 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+
+  # ─────────────────────────────────────────────────────────────
+  # DEV DEPLOYMENT
+  # Triggers on every push to the dev branch.
+  # Installs mise, reads mise.toml, installs the exact pinned
+  # versions of Argon and Wally, builds the place, publishes
+  # to the Dev Roblox Place via the Open Cloud API.
+  # ─────────────────────────────────────────────────────────────
+  deploy-dev:
+    name: Deploy to Dev
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Compile TypeScript
+        run: npm run build
+
+      - name: Install mise
+        run: |
+          curl https://mise.run | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install tools via mise
+        run: mise install
+
+      - name: Install Wally packages
+        run: mise x -- wally install
+
+      - name: Build place with Argon
+        run: mise x -- argon build default.project.json --output MyGame-Dev.rbxl -vvvv
+
+      - name: Publish to Dev Place
+        run: |
+          curl -s -X POST \
+            "https://apis.roblox.com/universes/v1/${{ secrets.ROBLOX_UNIVERSE_ID_DEV }}/places/${{ secrets.ROBLOX_PLACE_ID_DEV }}/versions" \
+            -H "x-api-key: ${{ secrets.ROBLOX_API_KEY_DEV }}" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @MyGame-Dev.rbxl
+
+
+  # ─────────────────────────────────────────────────────────────
+  # PRODUCTION DEPLOYMENT
+  # Triggers only when a PR is merged into main.
+  # The "production" GitHub Environment gate pauses this job
+  # and requires your manual approval before it runs.
+  # ─────────────────────────────────────────────────────────────
+  deploy-prod:
+    name: Deploy to Production
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Compile TypeScript
+        run: npm run build
+
+      - name: Install mise
+        run: |
+          curl https://mise.run | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install tools via mise
+        run: mise install
+
+      - name: Install Wally packages
+        run: mise x -- wally install
+
+      - name: Build place with Argon
+        run: mise x -- argon build default.project.json --output MyGame-Prod.rbxl -vvvv
+
+      - name: Publish to Production Place
+        run: |
+          curl -s -X POST \
+            "https://apis.roblox.com/universes/v1/${{ secrets.ROBLOX_UNIVERSE_ID_PROD }}/places/${{ secrets.ROBLOX_PLACE_ID_PROD }}/versions" \
+            -H "x-api-key: ${{ secrets.ROBLOX_API_KEY_PROD }}" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @MyGame-Prod.rbxl
