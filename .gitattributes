@@ -1,0 +1,16 @@
+# Enforce LF line endings for all text files
+* text=auto eol=lf
+
+# Explicitly declare common file types
+*.ts    text eol=lf
+*.json  text eol=lf
+*.toml  text eol=lf
+*.md    text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.lua   text eol=lf
+
+# Binary files — never convert
+*.rbxl  binary
+*.rbxm  binary
+*.rbxmx binary
