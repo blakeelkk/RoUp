@@ -1,5 +1,6 @@
 /node_modules
 /out/*
 !/out/world
+!/out/world/**
 /include
 *.tsbuildinfo
