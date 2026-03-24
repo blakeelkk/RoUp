@@ -2,7 +2,8 @@
 	"name": "roblox-ts-game",
 	"globIgnorePaths": [
 		"**/package.json",
-		"**/tsconfig.json"
+		"**/tsconfig.json",
+		"**/.gitkeep"
 	],
 	"tree": {
 		"$className": "DataModel",
@@ -43,7 +44,6 @@
 			}
 		},
 		"Workspace": {
-			"$ignoreUnknownInstances": true,
 			"$path": "out/world",
 			"$properties": {
 				"FilteringEnabled": true
